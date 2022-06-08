@@ -2,7 +2,7 @@ name: Build and Deploy - DEV
 
 on:
   push:
-    branches: [develop]
+    branches: [main]
 
 env:
   SERVICE_NAME: ${{ github.event.repository.name }}
