@@ -15,6 +15,7 @@ env:
   GKE_CLUSTER: dev
   COMMIT_SHA: ${{ github.sha }}
   ENVIRONMENT: dev
+  CONFIG_URL: http://jatin-config-service.default.svc.cluster.local
 
 jobs:
   setup-build-dev:
@@ -63,4 +64,5 @@ jobs:
             --ingress internal \
             --cluster $GKE_CLUSTER \
             --cluster-location $RUN_REGION \
+            --set-env-vars "config.url=$CONFIG_URL" \
             --image gcr.io/$PROJECT_ID/$SERVICE_NAME:${{ env.BRANCH_NAME }}
