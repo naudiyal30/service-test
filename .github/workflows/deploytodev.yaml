@@ -1,0 +1,66 @@
+name: Build and Deploy
+
+on:
+  push:
+    branches:
+      - main
+
+  workflow_dispatch:    
+
+# Environment variables available to all jobs and steps in workflow
+env:
+  SERVICE_NAME: ${{ github.event.repository.name }}
+  RUN_REGION: us-west1-c
+  PROJECT_ID: test-gcp-services-346407
+  GKE_CLUSTER: dev
+  COMMIT_SHA: ${{ github.sha }}
+  ENVIRONMENT: dev
+
+jobs:
+  setup-build-dev:
+    name: Setup, Build, and Deploy
+    runs-on: ubuntu-latest
+    steps:
+      # Get the code
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      # Get branch name/epoch time to use for tag
+      - name: Tags for Image
+        run: |
+          echo "BRANCH_NAME=$(echo ${GITHUB_REF##*/})" >> $GITHUB_ENV
+          echo "EPOCH_TIME=$(date +%s)" >> $GITHUB_ENV
+      # Build and push image to Google Container Registry
+      - name: Build and push Docker images
+        uses: docker/build-push-action@v1.1.0
+        with:
+          username: _json_key
+          password: ${{ secrets.GCP_DEV_CREDENTIALS }}
+          registry: gcr.io
+          repository: ${{env.PROJECT_ID}}/${{env.SERVICE_NAME}}
+          build_args: GITHUB_TOKEN=${{ secrets.GH_NPM_TOKEN }}
+          tags: ${{ env.BRANCH_NAME }},${{ env.COMMIT_SHA }},${{ env.SERVICE_NAME }},${{ env.EPOCH_TIME }}
+
+      # Setup gcloud CLI credentials
+      - name: Setup gcloud CLI
+        uses: google-github-actions/setup-gcloud@v0
+        with:
+          project_id: ${{ env.PROJECT_ID }}
+          service_account_email: ${{ secrets.GCP_DEV_EMAIL }}
+          service_account_key: ${{ secrets.GCP_DEV_CREDENTIALS}}
+          export_default_credentials: true
+
+      # Deploy to cloud run
+      - name: Deploy develop to cloud run
+        run: |
+          gcloud run deploy $SERVICE_NAME \
+            --set-env-vars ENVIRONMENT=$ENVIRONMENT \
+            --set-env-vars SERVICE_NAME=$SERVICE_NAME \
+            --set-env-vars PROJECT_ID=$PROJECT_ID \
+            --set-env-vars DEBUG_LOGS=true \
+            --platform gke \
+            --min-instances 1 \
+            --connectivity internal \
+            --cluster $GKE_CLUSTER \
+            --cluster-location $RUN_REGION \
+            --image gcr.io/$PROJECT_ID/$SERVICE_NAME:${{ env.BRANCH_NAME }}
