@@ -15,7 +15,7 @@ env:
   GKE_CLUSTER: dev
   COMMIT_SHA: ${{ github.sha }}
   ENVIRONMENT: dev
-  CONFIG_URL: http://jatin-config-service.default.svc.cluster.local
+  CONFIG_URL: 35.238.227.41
 
 jobs:
   setup-build-dev:
