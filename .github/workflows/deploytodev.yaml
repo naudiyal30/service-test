@@ -10,7 +10,7 @@ on:
 # Environment variables available to all jobs and steps in workflow
 env:
   SERVICE_NAME: ${{ github.event.repository.name }}
-  RUN_REGION: us-west1-c
+  RUN_REGION: us-central1-c
   PROJECT_ID: test-gcp-services-346407
   GKE_CLUSTER: dev
   COMMIT_SHA: ${{ github.sha }}
