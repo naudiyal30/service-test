@@ -60,7 +60,7 @@ jobs:
             --set-env-vars DEBUG_LOGS=true \
             --platform gke \
             --min-instances 1 \
-            --ingress external \
+            --ingress internal \
             --cluster $GKE_CLUSTER \
             --cluster-location $RUN_REGION \
             --image gcr.io/$PROJECT_ID/$SERVICE_NAME:${{ env.BRANCH_NAME }}
