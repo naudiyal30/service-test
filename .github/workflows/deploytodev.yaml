@@ -56,6 +56,7 @@ jobs:
         run: |
           gcloud run deploy $SERVICE_NAME \
             --set-env-vars ENVIRONMENT=$ENVIRONMENT \
+            --set-env-vars "config.url=$CONFIG_URL" \
             --set-env-vars SERVICE_NAME=$SERVICE_NAME \
             --set-env-vars PROJECT_ID=$PROJECT_ID \
             --set-env-vars DEBUG_LOGS=true \
@@ -64,5 +65,4 @@ jobs:
             --ingress internal \
             --cluster $GKE_CLUSTER \
             --cluster-location $RUN_REGION \
-            --set-env-vars "config.url=$CONFIG_URL" \
             --image gcr.io/$PROJECT_ID/$SERVICE_NAME:${{ env.BRANCH_NAME }}
