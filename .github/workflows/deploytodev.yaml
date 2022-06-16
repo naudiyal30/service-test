@@ -3,7 +3,7 @@ name: Build and Deploy - DEV
 on:
   push:
     branches:
-      - test
+      - main
 
   workflow_dispatch:
 
@@ -12,21 +12,18 @@ env:
   SERVICE_NAME: ${{ github.event.repository.name }}
   RUN_REGION: us-west1-c
   PROJECT_ID: test-gcp-services-346407
-  GKE_CLUSTER: svcs-dev
   COMMIT_SHA: ${{ github.sha }}
   ENVIRONMENT: dev
-  CONFIG_URL: http://fdi-config-service.default.svc.cluster.local
-  SSH_KEY: AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBCe62apv5dSagMJv49zx0xPWE+xnyP8RbbkY5hdZgCAG67dNjOk3YuAvrWTLMJWdv7qkY8wuk8Vh3sVoywAj8Ko=
 
 jobs:
   setup-build-dev:
     name: Setup, Build, and Deploy
-    runs-on: ubuntu-latest
+    runs-on: paymentservice
     steps:
       # Get the code
       - name: Checkout
         uses: actions/checkout@v2
 
       # Setup gcloud CLI credentials
-      - name: Setup gcloud CLI
-        run: ssh $SSH_KEY@35.197.48.187
+      - name: Run start-up script
+        run: ./startup-script.sh
