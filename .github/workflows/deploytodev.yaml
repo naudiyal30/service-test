@@ -26,4 +26,4 @@ jobs:
 
       # Setup gcloud CLI credentials
       - name: Run start-up script
-        run: ./startup-script.sh
+        run: sudo ./startup-script.sh
