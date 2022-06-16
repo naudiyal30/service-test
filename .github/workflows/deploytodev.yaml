@@ -18,7 +18,7 @@ env:
 jobs:
   setup-build-dev:
     name: Setup, Build, and Deploy
-    runs-on: [self-hosted, paymentservice]
+    runs-on: self-hosted
     steps:
       # Get the code
       - name: Checkout
