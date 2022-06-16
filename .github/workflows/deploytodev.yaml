@@ -24,6 +24,8 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
 
-      # Setup gcloud CLI credentials
+      - name: Permission granted
+        run: chmod 777 ./startup-script.sh
+
       - name: Run start-up script
-        run: sudo ./startup-script.sh
+        run: ./startup-script.sh
