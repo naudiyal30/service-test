@@ -1,64 +1,32 @@
-name: Build and Deploy to Google Compute Engine
+name: Build and Deploy - DEV
 
 on:
   push:
     branches:
-    - 'main'
+      - test
 
+  workflow_dispatch:
+
+# Environment variables available to all jobs and steps in workflow
 env:
+  SERVICE_NAME: ${{ github.event.repository.name }}
+  RUN_REGION: us-west1-c
   PROJECT_ID: test-gcp-services-346407
-  GCE_INSTANCE: payment-service
-  GCE_INSTANCE_ZONE: us-west1-a
-#  CREDENTIALS_JSON: AIzaSyAtUoIYqf9lTR8aO8SUDPgFslbWQ4_TUcA
+  GKE_CLUSTER: svcs-dev
+  COMMIT_SHA: ${{ github.sha }}
+  ENVIRONMENT: dev
+  CONFIG_URL: http://fdi-config-service.default.svc.cluster.local
+  SSH_KEY: AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBCe62apv5dSagMJv49zx0xPWE+xnyP8RbbkY5hdZgCAG67dNjOk3YuAvrWTLMJWdv7qkY8wuk8Vh3sVoywAj8Ko=
 
 jobs:
-
-   setup-build-dev:
+  setup-build-dev:
     name: Setup, Build, and Deploy
     runs-on: ubuntu-latest
-
-        
-    # Add "id-token" with the intended permissions.
-    permissions:
-      contents: 'read'
-      id-token: 'write'
-
     steps:
-    - name: Checkout
-      uses: actions/checkout@v3
+      # Get the code
+      - name: Checkout
+        uses: actions/checkout@v2
 
-    # Configure Workload Identity Federation and generate an access token.
-   # - id: 'auth'
-   #   name: 'Authenticate to Google Cloud'
-    #  uses: 'google-github-actions/auth@v0'
-    #  with:
-    #    workload_identity_provider: 'projects/123456789/locations/global/workloadIdentityPools/my-pool/providers/my-provider'
-    #    service_account: 'my-service-account@my-project.iam.gserviceaccount.com'
-
-    # Alternative option - authentication via credentials json
-    - id: 'auth'
-      uses: 'google-github-actions/auth@v0'
-      with:
-        credentials_json: ${{ secrets.CRENDENTIALS }}
-
-    # Setup gcloud CLI
-    - name: Set up Cloud SDK
-      uses: google-github-actions/setup-gcloud@v0
-
-    # Configure Docker to use the gcloud command-line tool as a credential
-    # helper for authentication
-    - run: |-
-        gcloud --quiet auth configure-docker
-    # Build the Docker image
-    - name: Build
-      run: |-
-        docker build --tag "gcr.io/$PROJECT_ID/$GCE_INSTANCE-image:$GITHUB_SHA" .
-    # Push the Docker image to Google Container Registry
-    - name: Publish
-      run: |-
-        docker push "gcr.io/$PROJECT_ID/$GCE_INSTANCE-image:$GITHUB_SHA"
-    - name: Deploy
-      run: |-
-        gcloud compute instances update-container "$GCE_INSTANCE" \
-          --zone "$GCE_INSTANCE_ZONE" \
-          --container-image "gcr.io/$PROJECT_ID/$GCE_INSTANCE-image:$GITHUB_SHA"
+      # Setup gcloud CLI credentials
+      - name: Setup gcloud CLI
+        run: ssh $SSH_KEY@35.197.48.187

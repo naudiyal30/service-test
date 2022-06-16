@@ -1,11 +1,20 @@
 {
-  "name": "sample-node-project",
+  "name": "node-hello",
   "version": "1.0.0",
-  "description": "Sample Node.js Project",
-  "main": "app.js",
+  "description": "",
+  "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node index.js"
   },
-  "author": "Adem Cemil YALCIN",
-  "license": "ISC"
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/johnpapa/node-hello.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/johnpapa/node-hello/issues"
+  },
+  "homepage": "https://github.com/johnpapa/node-hello#readme"
 }
