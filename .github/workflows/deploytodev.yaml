@@ -16,7 +16,7 @@ env:
   COMMIT_SHA: ${{ github.sha }}
   ENVIRONMENT: dev
   CONFIG_URL: http://fdi-config-service.default.svc.cluster.local
-  SSH_KEY: ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBCe62apv5dSagMJv49zx0xPWE+xnyP8RbbkY5hdZgCAG67dNjOk3YuAvrWTLMJWdv7qkY8wuk8Vh3sVoywAj8Ko= google-ssh {"userName":"jatinnaudiyal2305@gmail.com","expireOn":"2022-06-16T02:49:17+0000"}
+  SSH_KEY: AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBCe62apv5dSagMJv49zx0xPWE+xnyP8RbbkY5hdZgCAG67dNjOk3YuAvrWTLMJWdv7qkY8wuk8Vh3sVoywAj8Ko=
 
 jobs:
   setup-build-dev:
