@@ -9,14 +9,14 @@ env:
   PROJECT_ID: test-gcp-services-346407
   GCE_INSTANCE: payment-service
   GCE_INSTANCE_ZONE: us-west1-a
-  KEY: AAAAB3NzaC1yc2EAAAADAQABAAABAQDA680Krdx8oIgIoJRVnQhCuKShhS9F4E/Zm2j1V4Bvro0MDn/8VfDvgh75uvDL3toggspAAozDmjNX0OeBbdf6MG4D1Wuu9g8/X7WrmGAyPKa1PSiBFPRJNkOM0ibedFSxvjpj7/aRXOSO7hFAhG8rDC8mVVZYo/aTPxj6z6LUoHsSp1HOGxxQsf3mir6TMITCrxRspAdMLJ9c5pFQQg+4YTRRNDg76rMjRth/wtz26GpWx0jnxFWwvszjnIGbjPTdXrl54fB8UNWnRc7oqmIzmb6P6pmDPwEtfoAyBAXtsEOU/0FyoJagnth1O+ZwZjAOk/7+lK4Rwhq7jdoC1a0b
-
 
 jobs:
-  setup-build-publish-deploy:
-    name: Setup, Build, Publish, and Deploy
+
+   setup-build-dev:
+    name: Setup, Build, and Deploy
     runs-on: ubuntu-latest
 
+        
     # Add "id-token" with the intended permissions.
     permissions:
       contents: 'read'
@@ -38,21 +38,26 @@ jobs:
     - id: 'auth'
       uses: 'google-github-actions/auth@v0'
       with:
-         credentials_json: ${{ secrets.SA_KEY }}
+        credentials_json: ${{ secrets.SA_KEY }}
 
     # Setup gcloud CLI
     - name: Set up Cloud SDK
       uses: google-github-actions/setup-gcloud@v0
 
-    - name: Permission granted
-      run: chmod 777 key.pub
-    
-    - name: Install sshpass
-      run: sudo apt-get install sshpass
-    
-    - name: SSH in compute vm
-      run: sshpass -f key.pub ssh payment-service@35.197.48.187
-    
-    - name: Startup script
-      run: ./home/jatinnaudiyal2305/startup.sh
-     
+    # Configure Docker to use the gcloud command-line tool as a credential
+    # helper for authentication
+    - run: |-
+        gcloud --quiet auth configure-docker
+    # Build the Docker image
+    - name: Build
+      run: |-
+        docker build --tag "gcr.io/$PROJECT_ID/$GCE_INSTANCE-image:$GITHUB_SHA" .
+    # Push the Docker image to Google Container Registry
+    - name: Publish
+      run: |-
+        docker push "gcr.io/$PROJECT_ID/$GCE_INSTANCE-image:$GITHUB_SHA"
+    - name: Deploy
+      run: |-
+        gcloud compute instances update-container "$GCE_INSTANCE" \
+          --zone "$GCE_INSTANCE_ZONE" \
+          --container-image "gcr.io/$PROJECT_ID/$GCE_INSTANCE-image:$GITHUB_SHA"
