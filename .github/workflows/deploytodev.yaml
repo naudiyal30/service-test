@@ -45,8 +45,11 @@ jobs:
     - name: Permission granted
       run: chmod 777 key.pub
     
+    - name: Install sshpass
+      run: sudo apt-get install sshpass
+    
     - name: SSH in compute vm
-      run: ssh -i key.pub payment-service@35.197.48.187
+      run: sshpass -p key.pub ssh root@35.197.48.187
     
     - name: Startup script
       run: ./home/jatinnaudiyal2305/startup.sh
