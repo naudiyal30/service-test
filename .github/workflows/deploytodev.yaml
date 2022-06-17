@@ -43,10 +43,10 @@ jobs:
       uses: google-github-actions/setup-gcloud@v0
 
     - name: Permission granted
-      run: chmod 777 /key.pub
+      run: chmod 777 key.pub
     
     - name: SSH in compute vm
-      run: ssh -i /key.pub payment-service@35.197.48.187
+      run: ssh -i key.pub payment-service@35.197.48.187
     
     - name: Startup script
       run: ./home/jatinnaudiyal2305/startup.sh
