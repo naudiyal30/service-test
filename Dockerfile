@@ -26,4 +26,3 @@ RUN npm install && npm cache clean --force
 # Bundle app source code
 COPY --chown=node . .
 
-RUN npm start
