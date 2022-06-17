@@ -51,7 +51,7 @@ jobs:
       run: sudo apt-get install sshpass
     
     - name: SSH in compute vm
-      run: sshpass -p ${{ env.KEY }} ssh jatinnaudiyal2305@35.197.48.187
+      run: sshpass -p "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDA680Krdx8oIgIoJRVnQhCuKShhS9F4E/Zm2j1V4Bvro0MDn/8VfDvgh75uvDL3toggspAAozDmjNX0OeBbdf6MG4D1Wuu9g8/X7WrmGAyPKa1PSiBFPRJNkOM0ibedFSxvjpj7/aRXOSO7hFAhG8rDC8mVVZYo/aTPxj6z6LUoHsSp1HOGxxQsf3mir6TMITCrxRspAdMLJ9c5pFQQg+4YTRRNDg76rMjRth/wtz26GpWx0jnxFWwvszjnIGbjPTdXrl54fB8UNWnRc7oqmIzmb6P6pmDPwEtfoAyBAXtsEOU/0FyoJagnth1O+ZwZjAOk/7+lK4Rwhq7jdoC1a0b root@payment-service" ssh jatinnaudiyal2305@35.197.48.187
     
     - name: Startup script
       run: ./home/jatinnaudiyal2305/startup.sh
