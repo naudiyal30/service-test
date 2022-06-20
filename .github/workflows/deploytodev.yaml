@@ -12,7 +12,7 @@ env:
   PROVISIONER_APP_ID: fff-provisioner-apps
   SERVICE_NAME: ${{ github.event.repository.name }}
   RUN_REGION: us-west1-c
-  PROJECT_ID: dev-resources-257716
+  PROJECT_ID: test-gcp-services-346407
   COMMIT_SHA: ${{ github.sha }}
 
 
